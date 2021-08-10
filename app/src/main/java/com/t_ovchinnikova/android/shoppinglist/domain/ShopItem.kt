@@ -3,7 +3,7 @@ package com.t_ovchinnikova.android.shoppinglist.domain
 data class ShopItem (
     val name: String,
     val count: Int,
-    val enabled: Boolean,
+    var enabled: Boolean,
     var id: Int = UNDEFINED_ID
 ) {
     companion object {
