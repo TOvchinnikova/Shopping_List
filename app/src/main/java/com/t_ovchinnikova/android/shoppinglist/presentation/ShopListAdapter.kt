@@ -1,6 +1,7 @@
 package com.t_ovchinnikova.android.shoppinglist.presentation
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
