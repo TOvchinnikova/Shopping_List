@@ -8,7 +8,7 @@ import java.lang.RuntimeException
 
 object ShopListRepositoryImpl : ShopListRepository {
 
-    private val shopList = mutableListOf<ShopItem>()
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
     private val shopListLD = MutableLiveData<List<ShopItem>>()
 
     private var autoIncrementId = 0
@@ -40,14 +40,14 @@ object ShopListRepositoryImpl : ShopListRepository {
     }
 
     override fun getShopItem(shopItemId: Int): ShopItem {
-       return shopList.find { it.id == shopItemId } ?: throw RuntimeException("Element not found")
+        return shopList.find { it.id == shopItemId } ?: throw RuntimeException("Element not found")
     }
 
     override fun getShopList(): LiveData<List<ShopItem>> {
         return shopListLD
     }
 
-    private fun updateList(){
+    private fun updateList() {
         shopListLD.value = shopList.toList()
     }
 
