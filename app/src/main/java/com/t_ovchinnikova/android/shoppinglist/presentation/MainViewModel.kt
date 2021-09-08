@@ -1,17 +1,18 @@
 package com.t_ovchinnikova.android.shoppinglist.presentation
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.t_ovchinnikova.android.shoppinglist.data.ShopListRepositoryImpl
 import com.t_ovchinnikova.android.shoppinglist.domain.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _shopList =  MutableLiveData<List<ShopItem>>()
-
-    private val repository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
 
     private val getShopListUseCase = GetShopListUseCase(repository)
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
@@ -20,13 +21,15 @@ class MainViewModel : ViewModel() {
     var shopList: LiveData<List<ShopItem>> = getShopListUseCase.getShopList()
 
     fun deleteShopItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        viewModelScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem){
-        val newItem = shopItem.copy(enabled = shopItem.enabled.not())
-        editShopItemUseCase.editShopItem(newItem)
+        viewModelScope.launch {
+            val newItem = shopItem.copy(enabled = shopItem.enabled.not())
+            editShopItemUseCase.editShopItem(newItem)
+        }
     }
-
-
 }
