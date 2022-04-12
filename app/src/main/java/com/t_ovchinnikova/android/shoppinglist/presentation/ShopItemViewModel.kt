@@ -1,26 +1,21 @@
 package com.t_ovchinnikova.android.shoppinglist.presentation
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.*
-import com.t_ovchinnikova.android.shoppinglist.data.ShopListRepositoryImpl
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.t_ovchinnikova.android.shoppinglist.domain.AddShopItemUseCase
 import com.t_ovchinnikova.android.shoppinglist.domain.EditShopItemUseCase
 import com.t_ovchinnikova.android.shoppinglist.domain.GetShopItemUseCase
 import com.t_ovchinnikova.android.shoppinglist.domain.ShopItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import javax.inject.Inject
 
-class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = ShopListRepositoryImpl(application)
-
-    private val getShopItemUseCase = GetShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
-    private val addShopItemUseCase = AddShopItemUseCase(repository)
+class ShopItemViewModel @Inject constructor(
+    private val getShopItemUseCase: GetShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase,
+    private val addShopItemUseCase: AddShopItemUseCase
+) : ViewModel() {
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean> = _errorInputName
@@ -88,7 +83,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
             _errorInputName.value = true
             result = false
         }
-        if (count <= 0 ) {
+        if (count <= 0) {
             _errorInputCount.value = true
             result = false
         }
