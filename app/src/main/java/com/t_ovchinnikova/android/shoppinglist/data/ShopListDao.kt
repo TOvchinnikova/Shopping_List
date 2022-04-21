@@ -1,5 +1,6 @@
 package com.t_ovchinnikova.android.shoppinglist.data
 
+import android.database.Cursor
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -12,6 +13,9 @@ interface ShopListDao {
 
     @Query("SELECT * FROM shop_items")
     fun getShopList(): LiveData<List<ShopItemDbModel>>
+
+    @Query("SELECT * FROM shop_items")
+    fun getShopListCursor(): Cursor
 
     @Insert(onConflict = REPLACE)
     suspend fun addShopItem(shopItem: ShopItemDbModel)
